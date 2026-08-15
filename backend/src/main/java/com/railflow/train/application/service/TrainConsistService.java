@@ -1,5 +1,8 @@
 package com.railflow.train.application.service;
 
+import com.railflow.train.adapter.out.persistence.TrainConsistEntity;
+import com.railflow.train.application.port.in.CreateTrainConsistUseCase;
+import com.railflow.train.application.port.out.SaveTrainConsistPort;
 import com.railflow.train.application.port.in.ValidateTrainConsistUseCase;
 import com.railflow.train.domain.Locomotive;
 import com.railflow.train.domain.RailCar;
@@ -8,7 +11,7 @@ import com.railflow.train.domain.TrainConsistValidationResult;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TrainConsistService implements ValidateTrainConsistUseCase {
+public class TrainConsistService implements CreateTrainConsistUseCase,ValidateTrainConsistUseCase {
 
 	public TrainConsistValidationResult validate(Train train) {
 		 validateInput(train);
@@ -104,5 +107,18 @@ public class TrainConsistService implements ValidateTrainConsistUseCase {
         }
     }
 
+    private final SaveTrainConsistPort saveTrainConsistPort;
+
+    public TrainConsistService(
+            SaveTrainConsistPort saveTrainConsistPort) {
+
+        this.saveTrainConsistPort = saveTrainConsistPort;
+    }
+
+    @Override
+    public TrainConsistEntity create(TrainConsistEntity trainConsist) {
+
+        return saveTrainConsistPort.save(trainConsist);
+    }
 
 }

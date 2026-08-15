@@ -1,5 +1,16 @@
 spring:
   application:
     name: railflow-backend
+  
+  datasource: 
+    url: jdbc:postgresql://localhost:5433/rail_ops
+    username: postgres
+    password: 111
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    
 server:
   port: 8083
