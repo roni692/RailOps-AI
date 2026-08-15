@@ -1,17 +1,9 @@
 package com.railflow.train.adapter.out.persistence;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
 import org.springframework.stereotype.Component;
 
 import com.railflow.train.application.port.out.SaveTrainConsistPort;
+import com.railflow.train.domain.TrainConsist;
 
 @Component
 public class TrainConsistPersistenceAdapter
@@ -21,12 +13,14 @@ public class TrainConsistPersistenceAdapter
 
     public TrainConsistPersistenceAdapter(
             TrainConsistJpaRepository repository) {
+
         this.repository = repository;
     }
 
     @Override
-    public TrainConsistEntity save(TrainConsistEntity trainConsist) {
+    public TrainConsist save(TrainConsist trainConsist) {
 
+        // Domain → JPA Entity
         TrainConsistEntity entity = new TrainConsistEntity();
 
         entity.setTrainNumber(trainConsist.getTrainNumber());
@@ -34,9 +28,11 @@ public class TrainConsistPersistenceAdapter
         entity.setCreatedAt(trainConsist.getCreatedAt());
         entity.setUpdatedAt(trainConsist.getUpdatedAt());
 
+        // Database INSERT
         TrainConsistEntity saved = repository.save(entity);
 
-        return new TrainConsistEntity(
+        // JPA Entity → Domain
+        return new TrainConsist(
                 saved.getId(),
                 saved.getTrainNumber(),
                 saved.getStatus(),
@@ -44,43 +40,4 @@ public class TrainConsistPersistenceAdapter
                 saved.getUpdatedAt()
         );
     }
-//	@Override
-//	public <S extends TrainConsistEntity, R> R findBy(Example<S> example,
-//			Function<FetchableFluentQuery<S>, R> queryFunction) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	@Override
-//	public Optional<TrainConsistEntity> findById(Long id) {
-//		 return repository.findById(id)
-//		            .map(entity -> new TrainConsistEntity(
-//		                    entity.getId(),
-//		                    entity.getTrainNumber(),
-//		                    entity.getStatus(),
-//		                    entity.getCreatedAt(),
-//		                    entity.getUpdatedAt()
-//		            ));
-//	}
-//
-//	@Override
-//	public List<TrainConsistEntity> findAll() {
-//		 
-//		return repository.findAll()
-//		            .stream()
-//		            .map(entity -> new TrainConsistEntity(
-//		                    entity.getId(),
-//		                    entity.getTrainNumber(),
-//		                    entity.getStatus(),
-//		                    entity.getCreatedAt(),
-//		                    entity.getUpdatedAt()
-//		            ))
-//		            .toList();
-//	}
-//
-//	@Override
-//	public void deleteById(Long id) {
-//		// TODO Auto-generated method stub
-//		repository.deleteById(id);
-//	}
 }

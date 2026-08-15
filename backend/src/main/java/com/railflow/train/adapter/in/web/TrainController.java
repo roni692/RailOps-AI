@@ -4,10 +4,12 @@ import com.railflow.train.adapter.in.web.dto.LocomotiveRequest;
 import com.railflow.train.adapter.in.web.dto.RailCarRequest;
 import com.railflow.train.adapter.in.web.dto.TrainConsistRequest;
 import com.railflow.train.adapter.in.web.dto.TrainConsistResponse;
+import com.railflow.train.application.port.in.CreateTrainConsistUseCase;
 import com.railflow.train.application.port.in.ValidateTrainConsistUseCase;
 import com.railflow.train.domain.Locomotive;
 import com.railflow.train.domain.RailCar;
 import com.railflow.train.domain.Train;
+import com.railflow.train.domain.TrainConsist;
 import com.railflow.train.domain.TrainConsistValidationResult;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +23,12 @@ public class TrainController {
 
     private final ValidateTrainConsistUseCase validateTrainConsistUseCase;
 
+    private final CreateTrainConsistUseCase createTrainConsistUseCase;
     public TrainController(
-            ValidateTrainConsistUseCase validateTrainConsistUseCase) {
+            ValidateTrainConsistUseCase validateTrainConsistUseCase,CreateTrainConsistUseCase createTrainConsistUseCase) {
 
         this.validateTrainConsistUseCase = validateTrainConsistUseCase;
+        this.createTrainConsistUseCase = createTrainConsistUseCase;
     }
 
     @PostMapping("/validate-consist")
@@ -41,6 +45,16 @@ public class TrainController {
         );
     }
 
+    
+    @PostMapping("/consists")
+    public ResponseEntity<TrainConsist> createConsist(
+            @RequestBody TrainConsist trainConsist) {
+
+        TrainConsist saved =
+                createTrainConsistUseCase.create(trainConsist);
+
+        return ResponseEntity.ok(saved);
+    }
     private Train mapToDomain(TrainConsistRequest request) {
 
         List<Locomotive> locomotives =

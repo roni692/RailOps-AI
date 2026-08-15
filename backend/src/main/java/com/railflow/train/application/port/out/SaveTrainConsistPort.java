@@ -1,8 +1,8 @@
 package com.railflow.train.application.port.out;
 
-import com.railflow.train.adapter.out.persistence.TrainConsistEntity;
+import com.railflow.train.domain.TrainConsist;
 
 public interface SaveTrainConsistPort {
 
-	TrainConsistEntity save(TrainConsistEntity trainConsist);
+	TrainConsist save(TrainConsist trainConsist);
 }

@@ -1,8 +1,8 @@
 package com.railflow.train.application.port.in;
 
-import com.railflow.train.adapter.out.persistence.TrainConsistEntity;
+import com.railflow.train.domain.TrainConsist;
 
 public interface CreateTrainConsistUseCase {
 
-	TrainConsistEntity create(TrainConsistEntity trainConsist);
+	TrainConsist create(TrainConsist trainConsist);
 }
