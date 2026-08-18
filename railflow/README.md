@@ -56,3 +56,4 @@ Permissioned rail APIs will only be presented as real integrations if access is 
 - `docs/ai-design.md`
 - `docs/integration-matrix.md`
 - `docs/roadmap-to-aug-26.md`
+- `docs/interview-prep-plan.md`
