@@ -9,6 +9,28 @@ and "pass the loop."
 Start date: Aug 18, 2026 (today, per the existing sprint = "add Resilience4j" day).
 End date: ~Nov 16, 2026.
 
+## Baseline check-in (Aug 18) — honest starting point
+
+Self-reported baseline: LeetCode is currently a weak area overall; linked-list-style problems
+are the one pattern that's solid; system design has not been started at all. This changes the
+shape of Phase 1 below in three ways versus a generic plan:
+
+1. **LeetCode restarts from true fundamentals, not mediums.** Jumping to Blind 75 mediums
+   while still weak on basics is the #1 reason people plateau. Weeks 1–2 below are almost
+   all easy/easy-medium arrays, strings, and hashmaps — the patterns that ~40% of all
+   interview problems reduce to — before layering anything new on top of linked lists.
+2. **System design starts at zero, on purpose.** No case studies yet — Week 1 is vocabulary
+   and mental models only (client-server, HTTP, latency vs throughput, vertical vs horizontal
+   scaling). You cannot skip this step and still sound coherent in Week 4's first case study.
+3. **Linked lists become spaced-repetition maintenance, not new learning.** 1–2 linked-list
+   problems every 5–7 days (not daily) is enough to keep the pattern sharp while LeetCode time
+   goes toward the weaker areas.
+
+Phase 1 below (Weeks 1–4) is rewritten week-by-week to reflect this. Phases 2–3 already assume
+you've closed this gap, so revisit them once Phase 1 is actually done — don't rush ahead on
+a fixed date if Week 2's fundamentals aren't solid yet; slipping the calendar by a week here is
+cheaper than carrying a shaky foundation into mediums.
+
 ## What a Staff/Lead FDE loop actually tests
 
 Most FDE loops (Palantir-style forward-deployed roles, applied-AI/solutions-architecture
@@ -69,11 +91,37 @@ days of the phase:
   over a raw RestTemplate," "why the LLM never sees raw DB rows." These become your system
   design and behavioral answers verbatim — write them as you go, not the week before interviews.
 
-LeetCode: Blind 75 / NeetCode 150, focused on arrays/strings, hashmaps, two pointers, sliding
-window — plus your existing linked-list track. Target ~35–40 problems by end of phase.
+### Phase 1, week by week
 
-System design: fundamentals only — load balancing, caching strategies, read/write splitting,
-SQL vs NoSQL tradeoffs, CAP theorem, queues vs pub/sub (map straight onto why you chose Kafka).
+**LeetCode** (aim for correctness and a clean explanation over speed this phase — timing starts
+in Phase 2):
+
+| Week | Focus | Problems (illustrative, swap freely within the pattern) | Volume |
+|---|---|---|---|
+| 1 | Arrays & strings basics: iteration, in-place mutation, frequency counting | Two Sum, Contains Duplicate, Valid Anagram, Best Time to Buy/Sell Stock, Valid Parentheses | 8–10 |
+| 2 | Hashmaps + two pointers | Group Anagrams, Top K Frequent Elements, Valid Palindrome, Two Sum II, 3Sum, Container With Most Water | 8–10 |
+| 3 | Sliding window + binary search (new patterns) + 1 linked-list refresher | Longest Substring Without Repeating Characters, Minimum Window Substring (stretch), Binary Search, Search in Rotated Sorted Array; refresh: Reverse Linked List, Merge Two Sorted Lists | 8–10 |
+| 4 | Stacks/queues + intro trees (BFS/DFS) + 1 linked-list refresher | Valid Parentheses variants, Min Stack, Invert Binary Tree, Maximum Depth of Binary Tree, Same Tree; refresh: Linked List Cycle, Merge K Sorted Lists (stretch) | 8–10 |
+
+For every problem: name the pattern before coding, solve without looking at the solution for at
+least 20 minutes, then state time/space complexity out loud as if to an interviewer. If stuck
+past 20 minutes, read *just enough* of a hint to unblock (not the full solution), then redo it
+unaided 2 days later. Keep a running list of "problems I had to redo" — that list is your
+Phase-1 exit ticket; don't move to Phase 2 mediums until it's short.
+
+**System design** (zero to first case study in 4 weeks):
+
+| Week | Focus | Goal |
+|---|---|---|
+| 1 | Vocabulary and mental models: client-server model, DNS, HTTP/REST basics, latency vs throughput, vertical vs horizontal scaling, what "availability" and "durability" mean | Be able to define each term in one sentence, unaided, no case study yet |
+| 2 | Data layer: SQL vs NoSQL tradeoffs, indexing basics, replication (leader/follower), what a cache is and why (read-through/write-through), CDN basics | Explain, from memory, why you'd choose Postgres vs a NoSQL store for a given access pattern |
+| 3 | Scaling & messaging: load balancers, horizontal partitioning/sharding, queues vs pub/sub, at-least-once vs exactly-once delivery — deliberately mirrored against why RailFlow uses Kafka | Write 1 page connecting each concept to a concrete RailFlow decision |
+| 4 | First case study, untimed, written not just discussed: **"design a URL shortener"** (the canonical first case study — small surface area, forces you to touch API design, data model, and one scaling decision) | Produce requirements → back-of-envelope estimate → API → data model → high-level diagram → one bottleneck + fix, on paper, even if it's rough |
+
+Free resources that match this zero-to-one pace: the "System Design Primer" GitHub repo for
+vocabulary, and ByteByteGo's free YouTube fundamentals videos (load balancing, caching,
+databases) as your 30-min theory slot for weeks 1–3. Save Alex Xu's book chapters for Phase 2
+once you have vocabulary to hang them on.
 
 LLM/GenAI theory: prompt/context engineering, RAG pipeline mechanics, embeddings basics, why
 tool-calling beats letting the model free-write SQL — all of which you're implementing directly
@@ -152,9 +200,12 @@ weeks to build stamina, not just skill.
 
 ## Reference reading (pull from as your 30-min theory slot, don't binge)
 
-- System design: *System Design Interview* Vol. 1–2 (Alex Xu) for breadth; *Designing
-  Data-Intensive Applications* (Kleppmann) for the depth a Staff-level answer needs.
+- System design: "System Design Primer" (GitHub, free) + ByteByteGo fundamentals videos for
+  Weeks 1–3 vocabulary; *System Design Interview* Vol. 1–2 (Alex Xu) once you hit Week 4's
+  first case study and through Phase 2; *Designing Data-Intensive Applications* (Kleppmann) in
+  Phase 2 for the depth a Staff-level answer needs.
 - LLM/agents: your own `ai-design.md` is already the right shape — treat vendor docs
   (Anthropic/OpenAI tool-use guides, RAG evaluation write-ups) as supplementary, not primary.
-- LeetCode: NeetCode 150 / Blind 75 as the base list; add company-tagged sets only in Phase 3
-  if you know target companies.
+- LeetCode: start from an easy-heavy fundamentals set (Week 1–2 table above) before moving to
+  NeetCode 150 / Blind 75 mediums in Phase 2; add company-tagged sets only in Phase 3 if you
+  know target companies.
