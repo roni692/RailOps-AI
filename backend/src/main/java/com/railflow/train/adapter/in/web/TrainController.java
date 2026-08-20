@@ -5,6 +5,8 @@ import com.railflow.train.adapter.in.web.dto.RailCarRequest;
 import com.railflow.train.adapter.in.web.dto.TrainConsistRequest;
 import com.railflow.train.adapter.in.web.dto.TrainConsistResponse;
 import com.railflow.train.application.port.in.CreateTrainConsistUseCase;
+import com.railflow.train.application.port.in.GetAllTrainConsistsUseCase;
+import com.railflow.train.application.port.in.GetTrainConsistUseCase;
 import com.railflow.train.application.port.in.ValidateTrainConsistUseCase;
 import com.railflow.train.domain.Locomotive;
 import com.railflow.train.domain.RailCar;
@@ -12,6 +14,9 @@ import com.railflow.train.domain.Train;
 import com.railflow.train.domain.TrainConsist;
 import com.railflow.train.domain.TrainConsistValidationResult;
 import jakarta.validation.Valid;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,12 +28,30 @@ public class TrainController {
 
     private final ValidateTrainConsistUseCase validateTrainConsistUseCase;
 
+    private final GetTrainConsistUseCase getTrainConsistUseCase;
+    
     private final CreateTrainConsistUseCase createTrainConsistUseCase;
+    
+    private final GetAllTrainConsistsUseCase getAllTrainConsistsUseCase;
+    
+    private final UpdateTrainConsistUseCase updateUseCase;
     public TrainController(
-            ValidateTrainConsistUseCase validateTrainConsistUseCase,CreateTrainConsistUseCase createTrainConsistUseCase) {
+            ValidateTrainConsistUseCase validateTrainConsistUseCase,
+            CreateTrainConsistUseCase createTrainConsistUseCase,
+            GetTrainConsistUseCase getTrainConsistUseCase,
+            GetAllTrainConsistsUseCase getAllTrainConsistsUseCase,
+            UpdateTrainConsistUseCase updateUseCase) {
 
-        this.validateTrainConsistUseCase = validateTrainConsistUseCase;
-        this.createTrainConsistUseCase = createTrainConsistUseCase;
+        this.validateTrainConsistUseCase =
+                validateTrainConsistUseCase;
+
+        this.createTrainConsistUseCase =
+                createTrainConsistUseCase;
+
+        this.getTrainConsistUseCase =
+                getTrainConsistUseCase;
+        this.getAllTrainConsistsUseCase = getAllTrainConsistsUseCase;
+        this.updateUseCase = updateUseCase;
     }
 
     @PostMapping("/validate-consist")
@@ -98,4 +121,45 @@ public class TrainController {
                 request.weightTons()
         );
     }
+    
+    @GetMapping("/{trainNumber}")
+    public ResponseEntity<TrainConsist> getTrain(
+            @PathVariable String trainNumber) {
+
+        return ResponseEntity.ok(
+                getTrainConsistUseCase
+                        .getByTrainNumber(trainNumber)
+        );
+    }
+    
+    @GetMapping
+    public ResponseEntity<Page<TrainConsist>> getAll(
+            Pageable pageable) {
+
+        return ResponseEntity.ok(
+                getAllTrainConsistsUseCase.findAll(pageable)
+        );
+    }
+    
+    @GetMapping("/status/{status}")
+    public ResponseEntity<Page<TrainConsist>> findByStatus(
+            @PathVariable String status,
+            Pageable pageable) {
+
+        return ResponseEntity.ok(
+                getTrainConsistUseCase
+                        .findByStatus(status, pageable)
+        );
+    }
+    
+    @PutMapping("/{trainNumber}")
+    public ResponseEntity<TrainConsist> update(
+            @PathVariable String trainNumber,
+            @RequestBody UpdateTrainRequest request) {
+
+        return ResponseEntity.ok(
+                updateUseCase.update(
+                        trainNumber,
+                        request.status())
+        );
 }

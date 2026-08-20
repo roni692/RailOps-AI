@@ -1,6 +1,11 @@
 package com.railflow.train.application.service;
 
+import com.railflow.train.adapter.out.persistence.GetTrainConsistPort;
+import com.railflow.train.adapter.out.persistence.UpdateTrainConsistPort;
 import com.railflow.train.application.port.in.CreateTrainConsistUseCase;
+import com.railflow.train.application.port.in.GetAllTrainConsistsUseCase;
+import com.railflow.train.application.port.in.GetTrainConsistUseCase;
+import com.railflow.train.application.port.in.UpdateTrainConsistUseCase;
 import com.railflow.train.application.port.in.ValidateTrainConsistUseCase;
 import com.railflow.train.application.port.out.SaveTrainConsistPort;
 import com.railflow.train.domain.Locomotive;
@@ -8,11 +13,53 @@ import com.railflow.train.domain.RailCar;
 import com.railflow.train.domain.Train;
 import com.railflow.train.domain.TrainConsist;
 import com.railflow.train.domain.TrainConsistValidationResult;
+
+import java.time.LocalDateTime;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TrainConsistService implements CreateTrainConsistUseCase,ValidateTrainConsistUseCase {
+public class TrainConsistService implements CreateTrainConsistUseCase,ValidateTrainConsistUseCase,GetTrainConsistUseCase,GetAllTrainConsistsUseCase,UpdateTrainConsistUseCase {
 
+	 private final GetTrainConsistPort getTrainConsistPort;
+	 private final GetAllTrainConsistsUseCase getAllTrainConsistsUseCase;
+	 private final UpdateTrainConsistPort updateTrainConsistUseCase;
+	    public TrainConsistService(
+	            SaveTrainConsistPort saveTrainConsistPort,
+	            GetTrainConsistPort getTrainConsistPort,
+	            GetAllTrainConsistsUseCase getAllTrainConsistsUseCase,
+	            UpdateTrainConsistPort updateTrainConsistUseCase) {
+
+	        this.saveTrainConsistPort = saveTrainConsistPort;
+	        this.getTrainConsistPort = getTrainConsistPort;
+	        this.getAllTrainConsistsUseCase = getAllTrainConsistsUseCase;
+	        this.updateTrainConsistUseCase = updateTrainConsistUseCase;
+	    }
+	    @Override
+	    public TrainConsist getByTrainNumber(String trainNumber) {
+	    	TrainNumberValidator.validate(trainNumber);
+	    	
+	        return getTrainConsistPort
+	                .findByTrainNumber(trainNumber)
+	                .orElseThrow(() ->
+	                        new TrainConsistNotFoundException(
+	                                trainNumber));
+	    }
+	    @Override
+	    public TrainConsist update(
+	            String trainNumber,
+	            String status) {
+
+	        TrainConsist existing =
+	                getByTrainNumber(trainNumber);
+
+	        existing.setStatus(status);
+	        existing.setUpdatedAt(LocalDateTime.now());
+
+	        return updateTrainConsistUseCase.update(existing);
+	    }
 	public TrainConsistValidationResult validate(Train train) {
 		 validateInput(train);
 
@@ -109,17 +156,22 @@ public class TrainConsistService implements CreateTrainConsistUseCase,ValidateTr
 
     private final SaveTrainConsistPort saveTrainConsistPort;
 
-    public TrainConsistService(
-            SaveTrainConsistPort saveTrainConsistPort) {
-
-        this.saveTrainConsistPort = saveTrainConsistPort;
-    }
-
     @Override
     public TrainConsist create(TrainConsist trainConsist) {
 
         return saveTrainConsistPort.save(trainConsist);
     }
 
+    public Page<TrainConsist> findAll(Pageable pageable) {
+
+        return getTrainConsistPort.findAll(pageable);
+    }
+	@Override
+	public Page<TrainConsist> findByStatus(String status, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return getTrainConsistPort.findByStatus(status, pageable);
+	}
+    
+    
 
 }
