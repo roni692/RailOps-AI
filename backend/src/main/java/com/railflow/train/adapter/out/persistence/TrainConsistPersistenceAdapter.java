@@ -12,11 +12,7 @@ import com.railflow.train.application.port.out.GetTrainConsistPort;
 import com.railflow.train.application.port.out.SaveTrainConsistPort;
 import com.railflow.train.application.port.out.UpdateTrainConsistPort;
 import com.railflow.train.domain.TrainConsist;
-import com.railflow.train.application.port.out.GetTrainConsistPort;
-import com.railflow.train.application.port.out.SaveTrainConsistPort;
-import com.railflow.train.application.port.out.UpdateTrainConsistPort;
-import com.railflow.train.domain.Train;
-import com.railflow.train.domain.TrainConsist;
+import com.railflow.train.domain.TrainStatus;
 
 @Component
 public class TrainConsistPersistenceAdapter
@@ -82,7 +78,7 @@ public class TrainConsistPersistenceAdapter
 	
 	@Override
 	public Page<TrainConsist> findByStatus(
-	        String status,
+	        TrainStatus status,
 	        Pageable pageable) {
 
 	    return repository
@@ -100,7 +96,7 @@ public class TrainConsistPersistenceAdapter
 	                    trainConsist.getTrainNumber())
 	                .orElseThrow();
 
-	    entity.setTrainStatus(trainConsist.getTrainStatus());
+	    entity.setStatus(trainConsist.getStatus());
 	    entity.setUpdatedAt(LocalDateTime.now());
 
 	    return toDomain(repository.save(entity));

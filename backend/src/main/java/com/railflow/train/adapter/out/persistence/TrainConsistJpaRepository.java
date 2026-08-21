@@ -6,10 +6,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.railflow.train.domain.TrainStatus;
+
 public interface TrainConsistJpaRepository
         extends JpaRepository<TrainConsistEntity, Long> {
 
     Optional<TrainConsistEntity> findByTrainNumber(String trainNumber);
 
-    Page<TrainConsistEntity> findByStatus(String status, Pageable pageable);
+    Page<TrainConsistEntity> findByStatus(TrainStatus status, Pageable pageable);
 }
