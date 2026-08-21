@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class TrainConsistServiceTest {
 
     private final TrainConsistService service =
-            new TrainConsistService();
+            new TrainConsistService(null, null, null, null);
 
     @Test
     void shouldValidateValidTrain() {

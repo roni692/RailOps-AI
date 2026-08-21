@@ -15,6 +15,7 @@ import com.railflow.train.domain.RailCar;
 import com.railflow.train.domain.Train;
 import com.railflow.train.domain.TrainConsist;
 import com.railflow.train.domain.TrainConsistValidationResult;
+import com.railflow.train.domain.TrainStatus;
 
 import java.time.LocalDateTime;
 
@@ -57,10 +58,11 @@ DeleteTrainConsistUseCase{
 	                        new TrainConsistNotFoundException(
 	                                trainNumber));
 	    }
+	    @Transactional
 	    @Override
 	    public TrainConsist update(
 	            String trainNumber,
-	            String status) {
+	            TrainStatus status) {
 
 	        TrainConsist existing =
 	                getByTrainNumber(trainNumber);
@@ -177,13 +179,14 @@ DeleteTrainConsistUseCase{
 
         return getTrainConsistPort.findAll(pageable);
     }
+	@Transactional(readOnly = true)
 	@Override
 	public Page<TrainConsist> findByStatus(String status, Pageable pageable) {
-		// TODO Auto-generated method stub
-		return getTrainConsistPort.findByStatus(status, pageable);
+		TrainStatus trainStatus = TrainStatus.valueOf(status.trim().toUpperCase());
+		return getTrainConsistPort.findByStatus(trainStatus, pageable);
 	}
     
-	@Transactional(readOnly = true)
+	@Transactional
 	@Override
 	public void delete(String trainNumber) {
 	    getByTrainNumber(trainNumber);            // throws TrainConsistNotFoundException (404)

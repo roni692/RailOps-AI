@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.railflow.train.domain.TrainConsist;
+import com.railflow.train.domain.TrainStatus;
 
 public interface GetTrainConsistPort {
 
@@ -13,5 +14,5 @@ public interface GetTrainConsistPort {
 
     Page<TrainConsist> findAll(Pageable pageable);
 
-    Page<TrainConsist> findByStatus(String status, Pageable pageable);
+    Page<TrainConsist> findByStatus(TrainStatus status, Pageable pageable);
 }
