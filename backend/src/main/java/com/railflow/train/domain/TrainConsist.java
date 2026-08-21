@@ -6,7 +6,7 @@ public class TrainConsist {
 
     private Long id;
     private String trainNumber;
-    private String status;
+    private TrainStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -16,7 +16,7 @@ public class TrainConsist {
     public TrainConsist(
             Long id,
             String trainNumber,
-            String status,
+            TrainStatus status,
             LocalDateTime createdAt,
             LocalDateTime updatedAt) {
 
@@ -29,7 +29,7 @@ public class TrainConsist {
 
     public TrainConsist(
             String trainNumber,
-            String status,
+            TrainStatus status,
             LocalDateTime createdAt,
             LocalDateTime updatedAt) {
 
@@ -44,7 +44,7 @@ public class TrainConsist {
         return trainNumber;
     }
 
-    public String getStatus() {
+    public TrainStatus getStatus() {
         return status;
     }
 
@@ -64,8 +64,8 @@ public class TrainConsist {
         this.trainNumber = trainNumber;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public TrainStatus setStatus(TrainStatus status) {
+        return this.status = status;
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {
@@ -74,5 +74,24 @@ public class TrainConsist {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+    
+    public void transitionTo(TrainStatus next) {
+        if (!isValidTransition(this.status, next)) {
+            throw new IllegalStateException(
+                    "Invalid transition: " + status + " -> " + next);
+        }
+        this.status = next;
+    }
+
+    private boolean isValidTransition(TrainStatus current, TrainStatus next) {
+        return switch (current) {
+            case PLANNED    -> next == TrainStatus.READY || next == TrainStatus.CANCELLED;
+            case READY      -> next == TrainStatus.DEPARTED || next == TrainStatus.CANCELLED;
+            case DEPARTED   -> next == TrainStatus.IN_TRANSIT || next == TrainStatus.DELAYED;
+            case IN_TRANSIT -> next == TrainStatus.DELAYED || next == TrainStatus.ARRIVED;
+            case DELAYED    -> next == TrainStatus.IN_TRANSIT || next == TrainStatus.ARRIVED;
+            case ARRIVED, CANCELLED -> false;
+        };
     }
 }

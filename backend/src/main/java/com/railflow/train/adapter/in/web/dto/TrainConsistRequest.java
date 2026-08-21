@@ -9,8 +9,9 @@ import java.util.List;
 
 public record TrainConsistRequest(
 
-        @NotBlank
-        String trainNumber,
+		@NotBlank
+		@Size(max = 20)
+		String trainNumber,
 
         @NotEmpty
         List<@Valid LocomotiveRequest> locomotives,

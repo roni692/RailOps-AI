@@ -5,6 +5,7 @@ import com.railflow.train.adapter.in.web.dto.RailCarRequest;
 import com.railflow.train.adapter.in.web.dto.TrainConsistRequest;
 import com.railflow.train.adapter.in.web.dto.TrainConsistResponse;
 import com.railflow.train.application.port.in.CreateTrainConsistUseCase;
+import com.railflow.train.application.port.in.DeleteTrainConsistUseCase;
 import com.railflow.train.application.port.in.GetAllTrainConsistsUseCase;
 import com.railflow.train.application.port.in.GetTrainConsistUseCase;
 import com.railflow.train.application.port.in.ValidateTrainConsistUseCase;
@@ -14,12 +15,13 @@ import com.railflow.train.domain.Train;
 import com.railflow.train.domain.TrainConsist;
 import com.railflow.train.domain.TrainConsistValidationResult;
 import jakarta.validation.Valid;
-
+import com.railflow.train.adapter.in.web.dto.UpdateTrainRequest;
+import com.railflow.train.application.port.in.UpdateTrainConsistUseCase;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 @RestController
@@ -35,12 +37,15 @@ public class TrainController {
     private final GetAllTrainConsistsUseCase getAllTrainConsistsUseCase;
     
     private final UpdateTrainConsistUseCase updateUseCase;
+    
+    private final DeleteTrainConsistUseCase deleteTrainConsistUseCase;
     public TrainController(
             ValidateTrainConsistUseCase validateTrainConsistUseCase,
             CreateTrainConsistUseCase createTrainConsistUseCase,
             GetTrainConsistUseCase getTrainConsistUseCase,
             GetAllTrainConsistsUseCase getAllTrainConsistsUseCase,
-            UpdateTrainConsistUseCase updateUseCase) {
+            UpdateTrainConsistUseCase updateUseCase,
+            DeleteTrainConsistUseCase deleteTrainConsistUseCase) {
 
         this.validateTrainConsistUseCase =
                 validateTrainConsistUseCase;
@@ -52,6 +57,7 @@ public class TrainController {
                 getTrainConsistUseCase;
         this.getAllTrainConsistsUseCase = getAllTrainConsistsUseCase;
         this.updateUseCase = updateUseCase;
+        this.deleteTrainConsistUseCase = deleteTrainConsistUseCase;
     }
 
     @PostMapping("/validate-consist")
@@ -162,4 +168,11 @@ public class TrainController {
                         trainNumber,
                         request.status())
         );
+    }
+    
+    @DeleteMapping("/{trainNumber}")
+   // @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable String trainNumber) {
+    	deleteTrainConsistUseCase.delete(trainNumber);
+    }
 }

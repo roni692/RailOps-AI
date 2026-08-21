@@ -1,7 +1,9 @@
 package com.railflow.train.adapter.out.persistence;
 
 import java.time.LocalDateTime;
-
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import com.railflow.train.domain.TrainStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,8 +22,9 @@ public class TrainConsistEntity {
     @Column(name = "train_number", nullable = false, unique = true)
     private String trainNumber;
 
-    @Column(nullable = false)
-    private String status;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private TrainStatus status;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -29,7 +32,7 @@ public class TrainConsistEntity {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public TrainConsistEntity(Long id, String trainNumber, String status,LocalDateTime createdAt,
+    public TrainConsistEntity(Long id, String trainNumber, TrainStatus status,LocalDateTime createdAt,
     		LocalDateTime updatedAt){
     	this.id = id;
     	this.trainNumber = trainNumber;
@@ -57,11 +60,11 @@ public class TrainConsistEntity {
 		this.trainNumber = trainNumber;
 	}
 
-	public String getStatus() {
+	public TrainStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(TrainStatus status) {
 		this.status = status;
 	}
 

@@ -1,13 +1,15 @@
 package com.railflow.train.application.service;
 
-import com.railflow.train.adapter.out.persistence.GetTrainConsistPort;
-import com.railflow.train.adapter.out.persistence.UpdateTrainConsistPort;
 import com.railflow.train.application.port.in.CreateTrainConsistUseCase;
+import com.railflow.train.application.port.in.DeleteTrainConsistUseCase;
 import com.railflow.train.application.port.in.GetAllTrainConsistsUseCase;
 import com.railflow.train.application.port.in.GetTrainConsistUseCase;
 import com.railflow.train.application.port.in.UpdateTrainConsistUseCase;
 import com.railflow.train.application.port.in.ValidateTrainConsistUseCase;
+import com.railflow.train.application.port.out.DeleteTrainConsistPort;
+import com.railflow.train.application.port.out.GetTrainConsistPort;
 import com.railflow.train.application.port.out.SaveTrainConsistPort;
+import com.railflow.train.application.port.out.UpdateTrainConsistPort;
 import com.railflow.train.domain.Locomotive;
 import com.railflow.train.domain.RailCar;
 import com.railflow.train.domain.Train;
@@ -19,23 +21,31 @@ import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @Service
-public class TrainConsistService implements CreateTrainConsistUseCase,ValidateTrainConsistUseCase,GetTrainConsistUseCase,GetAllTrainConsistsUseCase,UpdateTrainConsistUseCase {
+public class TrainConsistService implements CreateTrainConsistUseCase,ValidateTrainConsistUseCase,GetTrainConsistUseCase,GetAllTrainConsistsUseCase,UpdateTrainConsistUseCase,
+DeleteTrainConsistUseCase{
 
+
+     private static final Logger log = LoggerFactory.getLogger(TrainConsistService.class);
 	 private final GetTrainConsistPort getTrainConsistPort;
-	 private final GetAllTrainConsistsUseCase getAllTrainConsistsUseCase;
+	 private final DeleteTrainConsistPort deleteTrainConsistPort;
+	// private final GetAllTrainConsistsUseCase getAllTrainConsistsUseCase;
 	 private final UpdateTrainConsistPort updateTrainConsistUseCase;
 	    public TrainConsistService(
 	            SaveTrainConsistPort saveTrainConsistPort,
 	            GetTrainConsistPort getTrainConsistPort,
-	            GetAllTrainConsistsUseCase getAllTrainConsistsUseCase,
-	            UpdateTrainConsistPort updateTrainConsistUseCase) {
+	            //GetAllTrainConsistsUseCase getAllTrainConsistsUseCase,
+	            UpdateTrainConsistPort updateTrainConsistUseCase,
+	            DeleteTrainConsistPort deleteTrainConsistPort) {
 
 	        this.saveTrainConsistPort = saveTrainConsistPort;
 	        this.getTrainConsistPort = getTrainConsistPort;
-	        this.getAllTrainConsistsUseCase = getAllTrainConsistsUseCase;
+	      //  this.getAllTrainConsistsUseCase = getAllTrainConsistsUseCase;
 	        this.updateTrainConsistUseCase = updateTrainConsistUseCase;
+	        this.deleteTrainConsistPort = deleteTrainConsistPort;
 	    }
 	    @Override
 	    public TrainConsist getByTrainNumber(String trainNumber) {
@@ -156,6 +166,7 @@ public class TrainConsistService implements CreateTrainConsistUseCase,ValidateTr
 
     private final SaveTrainConsistPort saveTrainConsistPort;
 
+    @Transactional
     @Override
     public TrainConsist create(TrainConsist trainConsist) {
 
@@ -172,6 +183,11 @@ public class TrainConsistService implements CreateTrainConsistUseCase,ValidateTr
 		return getTrainConsistPort.findByStatus(status, pageable);
 	}
     
-    
+	@Transactional(readOnly = true)
+	@Override
+	public void delete(String trainNumber) {
+	    getByTrainNumber(trainNumber);            // throws TrainConsistNotFoundException (404)
+	    deleteTrainConsistPort.deleteByTrainNumber(trainNumber);
+	}
 
 }
