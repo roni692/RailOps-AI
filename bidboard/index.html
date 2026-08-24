@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Bracket is a public, paid-ranking board for products worth discovering." />
+  <title>Bracket — Earn your spot</title>
+  <style>
+    :root { --ink:#141413; --muted:#706f6b; --line:#e5e3dc; --paper:#f8f7f2; --lime:#c9ff54; --violet:#7557ff; --rose:#ff715b; }
+    * { box-sizing:border-box; } body { margin:0; color:var(--ink); background:var(--paper); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    button,input,select { font:inherit; } button { cursor:pointer; }
+    .shell { width:min(1120px,calc(100% - 40px)); margin:auto; }
+    nav { min-height:76px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); }
+    .brand { display:flex; align-items:center; gap:10px; color:inherit; font-weight:800; font-size:21px; letter-spacing:-.9px; text-decoration:none; }
+    .mark { width:30px; height:30px; display:grid; place-items:center; background:var(--ink); border-radius:9px; color:var(--lime); font-size:18px; }
+    .nav-links { display:flex; gap:24px; align-items:center; color:var(--muted); font-size:14px; }
+    .nav-links a { color:inherit; text-decoration:none; } .button { border:1px solid var(--ink); background:var(--ink); color:white; border-radius:8px; padding:11px 15px; font-weight:700; font-size:14px; }
+    .button:hover { transform:translateY(-1px); } .button.lime { background:var(--lime); color:var(--ink); }
+    .hero { padding:84px 0 60px; display:grid; grid-template-columns:1.15fr .85fr; gap:70px; align-items:end; }
+    .eyebrow { color:var(--violet); font-size:12px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+    h1 { font-size:clamp(48px,7vw,84px); letter-spacing:-.07em; line-height:.91; margin:14px 0 23px; max-width:680px; }
+    .hero p { font-size:19px; line-height:1.55; color:var(--muted); max-width:560px; margin:0; }
+    .how { border:1px solid var(--line); padding:23px; border-radius:12px; background:#fffefa; }
+    .how h2 { font-size:14px; margin:0 0 16px; text-transform:uppercase; letter-spacing:.08em; }
+    .step { display:flex; gap:13px; padding:12px 0; border-top:1px solid var(--line); } .step:first-of-type { border-top:0; }
+    .number { color:var(--violet); font-weight:800; } .step strong,.step span { display:block; font-size:14px; } .step span { color:var(--muted); margin-top:3px; }
+    .board-head { display:flex; justify-content:space-between; align-items:end; border-top:2px solid var(--ink); padding:20px 0; }
+    .board-head h2 { margin:0; font-size:25px; letter-spacing:-.05em; } .board-head p { color:var(--muted); margin:4px 0 0; font-size:14px; }
+    .tabs { display:flex; gap:8px; overflow:auto; padding-bottom:22px; }
+    .tab { background:transparent; border:1px solid var(--line); padding:9px 13px; border-radius:999px; color:var(--muted); white-space:nowrap; font-size:13px; }
+    .tab.active { color:var(--ink); background:var(--lime); border-color:var(--ink); font-weight:700; }
+    .listing { display:grid; grid-template-columns:69px 1fr auto; gap:20px; align-items:center; padding:22px 0; border-top:1px solid var(--line); }
+    .rank { font-size:29px; font-weight:800; letter-spacing:-.08em; color:#a5a39c; } .listing:first-child .rank { color:var(--violet); }
+    .listing-body { min-width:0; } .name { display:flex; align-items:center; gap:9px; font-size:18px; font-weight:800; letter-spacing:-.04em; } .domain { color:var(--muted); font-size:13px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .desc { color:var(--muted); font-size:14px; margin:5px 0 0; line-height:1.4; max-width:670px; }.meta { color:var(--muted); margin-top:8px; font-size:12px; }.bid { text-align:right; min-width:130px; }.bid strong { display:block; font-size:20px; letter-spacing:-.04em; }.bid span { display:block; color:var(--muted); font-size:12px; margin:4px 0 10px; }.bid button { background:white; border:1px solid var(--ink); padding:7px 10px; border-radius:6px; font-size:12px; font-weight:800; }
+    .empty { padding:45px 0; color:var(--muted); text-align:center; border-top:1px solid var(--line); }
+    footer { margin-top:72px; padding:25px 0 40px; border-top:1px solid var(--line); display:flex; justify-content:space-between; gap:20px; color:var(--muted); font-size:13px; }
+    dialog { width:min(520px,calc(100% - 32px)); padding:0; border:0; border-radius:14px; box-shadow:0 24px 70px #0004; } dialog::backdrop { background:#14141388; }.modal { padding:28px; }.modal-header { display:flex; justify-content:space-between; align-items:start; }.modal h2 { font-size:28px; margin:0; letter-spacing:-.05em; }.modal p { color:var(--muted); margin:8px 0 22px; line-height:1.45; }.close { border:0; background:transparent; font-size:25px; line-height:1; }.form { display:grid; gap:13px; }.field { display:grid; gap:6px; }.field label { font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; }.field input,.field select { border:1px solid #cbc9c1; border-radius:7px; padding:11px; background:white; }.form .button { margin-top:5px; }.note { font-size:12px !important; margin:0 !important; }.toast { position:fixed; bottom:22px; left:50%; transform:translate(-50%,120px); background:var(--ink); color:white; padding:12px 16px; border-radius:8px; font-weight:700; font-size:14px; transition:transform .25s; }.toast.show { transform:translate(-50%,0); }
+    @media (max-width:700px) { .shell { width:min(100% - 28px,1120px); }.hero { grid-template-columns:1fr; gap:35px; padding:55px 0 43px; }.nav-links a { display:none; }.listing { grid-template-columns:38px 1fr; gap:12px; }.bid { grid-column:2; text-align:left; display:flex; gap:12px; align-items:center; }.bid span { margin:0; }.rank { font-size:22px; }.name { font-size:16px; }.domain { max-width:155px; } footer { flex-direction:column; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <nav><a class="brand" href="#"><span class="mark">↗</span> bracket</a><div class="nav-links"><a href="#board">The board</a><a href="#rules">Rules</a><button class="button" data-open>Claim a spot</button></div></nav>
+    <section class="hero">
+      <div><div class="eyebrow">A discovery board for builders</div><h1>Put your work where people look.</h1><p>Bracket is a public board for products, people, and ideas. The higher your contribution, the higher your place. Straightforward attention, no ad auction black box.</p></div>
+      <aside class="how" id="rules"><h2>How it works</h2><div class="step"><b class="number">01</b><div><strong>Submit your link</strong><span>Tell visitors what you are building.</span></div></div><div class="step"><b class="number">02</b><div><strong>Choose your contribution</strong><span>Start at $5, or out-rank another listing.</span></div></div><div class="step"><b class="number">03</b><div><strong>Show up on the board</strong><span>Verified contributions set the public order.</span></div></div></aside>
+    </section>
+    <section id="board"><div class="board-head"><div><h2>Today’s board</h2><p id="boardSub">Live rankings for the last 24 hours</p></div><button class="button lime" data-open>+ Claim a spot</button></div><div class="tabs" id="tabs"></div><div id="listings"></div></section>
+    <footer><span>© 2026 Bracket. An independent discovery board.</span><span>Payments are simulated in this local preview.</span></footer>
+  </main>
+  <dialog id="claimDialog"><div class="modal"><div class="modal-header"><div><h2>Claim your spot</h2><p>Add a project to the board. This preview stores the completed claim in your browser only.</p></div><button class="close" data-close aria-label="Close">×</button></div><form class="form" id="claimForm"><div class="field"><label for="title">Project name</label><input id="title" maxlength="48" placeholder="e.g. Orbit Notes" required></div><div class="field"><label for="url">Website URL</label><input id="url" type="url" placeholder="https://example.com" required></div><div class="field"><label for="description">One-line description</label><input id="description" maxlength="125" placeholder="What should visitors know?" required></div><div class="field"><label for="category">Category</label><select id="category"><option>Developer tools</option><option>Design & creative</option><option>AI & automation</option><option>Business tools</option></select></div><div class="field"><label for="amount">Contribution (USD)</label><input id="amount" type="number" min="5" step="1" value="5" required></div><button class="button lime" type="submit">Preview completed claim →</button><p class="note">Production version: replace this action with Stripe Checkout and update the rank only from a signed payment webhook.</p></form></div></dialog>
+  <div class="toast" id="toast" role="status"></div>
+  <script>
+    const seed = [
+      { name:"Signal", url:"signalhq.dev", desc:"A calm workspace for product decisions and customer feedback.", category:"Developer tools", amount:850, clicks:1240 },
+      { name:"Morrow", url:"morrow.studio", desc:"Design systems that help small teams ship a little faster.", category:"Design & creative", amount:570, clicks:817 },
+      { name:"Clover", url:"useclover.ai", desc:"A lightweight research assistant for teams that write.", category:"AI & automation", amount:425, clicks:635 },
+      { name:"Docket", url:"docket.so", desc:"Keep client work, decisions, and next steps in one tidy place.", category:"Business tools", amount:210, clicks:309 },
+      { name:"Tinker", url:"tinker.tools", desc:"Small tools for people who make things on the internet.", category:"Developer tools", amount:95, clicks:182 }
+    ];
+    const key = "bracket-local-listings";
+    const categories = ["All", ...new Set(seed.map(item => item.category))];
+    let activeCategory = "All";
+    let listings = JSON.parse(localStorage.getItem(key) || "null") || seed;
+    const format = value => new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}).format(value);
+    function renderTabs() { document.getElementById("tabs").innerHTML = categories.map(c => `<button class="tab ${c === activeCategory ? "active":""}" data-category="${c}">${c}</button>`).join(""); document.querySelectorAll("[data-category]").forEach(b => b.onclick = () => { activeCategory=b.dataset.category; render(); }); }
+    function renderListings() { const current=listings.filter(x => activeCategory==="All" || x.category===activeCategory).sort((a,b)=>b.amount-a.amount); document.getElementById("listings").innerHTML=current.length ? current.map((item,i)=>`<article class="listing"><div class="rank">#${i+1}</div><div class="listing-body"><div class="name">${escapeHtml(item.name)} <span class="domain">${escapeHtml(item.url.replace(/^https?:\/\//,""))}</span></div><p class="desc">${escapeHtml(item.desc)}</p><div class="meta">${escapeHtml(item.category)} · ${item.clicks.toLocaleString()} visits</div></div><div class="bid"><strong>${format(item.amount)}</strong><span>current contribution</span><button data-raise="${encodeURIComponent(item.url)}">Out-rank</button></div></article>`).join("") : '<div class="empty">No projects in this category yet. Claim the first spot.</div>'; document.querySelectorAll("[data-raise]").forEach(button => button.onclick=()=>{ const listing=listings.find(x=>x.url===decodeURIComponent(button.dataset.raise)); document.getElementById("amount").value=listing.amount+1; document.getElementById("category").value=listing.category; openDialog(); }); }
+    function escapeHtml(value) { const box=document.createElement("span"); box.textContent=value; return box.innerHTML; }
+    function render() { renderTabs(); renderListings(); }
+    const dialog=document.getElementById("claimDialog"); function openDialog(){ dialog.showModal(); document.getElementById("title").focus(); } document.querySelectorAll("[data-open]").forEach(button=>button.onclick=openDialog); document.querySelector("[data-close]").onclick=()=>dialog.close();
+    document.getElementById("claimForm").onsubmit = event => { event.preventDefault(); const form=event.target, url=form.url.value.trim(), entry={ name:form.title.value.trim(), url, desc:form.description.value.trim(), category:form.category.value, amount:Number(form.amount.value), clicks:0 }; const existing=listings.findIndex(item=>item.url===url); if(existing>=0) { if(entry.amount <= listings[existing].amount) return notify(`Choose at least ${format(listings[existing].amount+1)} to raise this listing.`); listings[existing]={...listings[existing],...entry}; } else listings.push(entry); localStorage.setItem(key,JSON.stringify(listings)); dialog.close(); form.reset(); activeCategory="All"; render(); notify(`${entry.name} is now on the board (local preview).`); };
+    function notify(message){const toast=document.getElementById("toast");toast.textContent=message;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),3200);}
+    render();
+  </script>
+</body>
+</html>
